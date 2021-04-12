@@ -5,6 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Statmath.Application.Task.Data.Context;
+using Statmath.Application.Task.DataHelper.Abstraction;
+using Statmath.Application.Task.DataHelper.Implementation;
+using Statmath.Application.Task.Mapping;
 
 namespace Statmath.Application.Task.Api
 {
@@ -19,12 +22,15 @@ namespace Statmath.Application.Task.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Startup));
 
             services.AddDbContext<ApplicationDbContext>(opt =>
             {
                 opt.UseNpgsql("Server=localhost; Port=5432; Database=application; User Id=postgres; Password=password");
             });
+
+            services.AddSingleton<IDateTimeConverter, DateTimeConverter>();
+
+            services.AddAutoMapper(typeof(MapperProfiles));
 
             services.AddControllers();
         }
