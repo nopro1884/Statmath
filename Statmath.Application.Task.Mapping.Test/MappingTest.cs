@@ -1,6 +1,4 @@
 using AutoMapper;
-using Statmath.Application.Task.Models;
-using System;
 using Xunit;
 
 namespace Statmath.Application.Task.Mapping.Test
@@ -32,6 +30,5 @@ namespace Statmath.Application.Task.Mapping.Test
         //    Assert.Equal("1984-08-18-18-00", converted.Start);
         //    Assert.Equal("1984-08-18-18-30", converted.End);
         //}
-
     }
 }

@@ -2,7 +2,9 @@
 {
     public class AppSettings
     {
-        public string Key1 { get; set; }
-        public string Key2 { get; set; }
+        public string Scheme { get; set; }
+        public string Host { get; set; }
+        public int Port { get; set; }
+        public string Path { get; set; }
     }
 }

@@ -19,24 +19,11 @@ namespace Statmath.Application.Task.Repository.Abstraction
             _dateTimeHelper = dateTimeHelper;
         }
 
-        public void Add(Plan plan)
+        public Task Add(Plan plan)
         {
             try
             {
                 _context.Plans.Add(plan);
-                _context.SaveChanges();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public void Add(IEnumerable<Plan> planCollection)
-        {
-            try
-            {
-                _context.Plans.AddRange(planCollection);
                 _context.SaveChanges();
             }
             catch (Exception)
@@ -54,15 +41,10 @@ namespace Statmath.Application.Task.Repository.Abstraction
         public IEnumerable<Plan> GetByStartDate(DateTime date)
             => _context.Plans.Where(p => _dateTimeHelper.IsDayEqual(p.StartedAt, date));
 
-        public Plan GetById(Guid id)
-            => _context.Plans.SingleOrDefault(p => p.Id == id);
-
         public Plan GetByJob(int job)
             => _context.Plans.FirstOrDefault(p => p.Job == job);
 
         public IEnumerable<Plan> GetByMachineName(string machine)
             => _context.Plans.Where(p => p.Machine == machine);
-
-        
     }
 }

@@ -11,12 +11,12 @@ namespace Statmath.Application.Task.Data.Context
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=application;Username=postgres;Password=password");
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=application;Username=postgres;Password=password");
 
-            base.OnConfiguring(optionsBuilder);
-        }
+        //    base.OnConfiguring(optionsBuilder);
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

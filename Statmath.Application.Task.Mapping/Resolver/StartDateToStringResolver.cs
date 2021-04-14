@@ -7,6 +7,7 @@ namespace Statmath.Application.Task.Mapping.Resolver
     public class StartDateToStringResolver : IValueResolver<Plan, PlanViewModel, string>
     {
         private readonly IDateTimeConverter _dateTimeConverter;
+
         public StartDateToStringResolver(IDateTimeConverter dateTimeConverter)
         {
             _dateTimeConverter = dateTimeConverter;

@@ -1,5 +1,4 @@
-﻿
-using Statmath.Application.Task.DataHelper.Abstraction;
+﻿using Statmath.Application.Task.DataHelper.Abstraction;
 using System;
 
 namespace Statmath.Application.Task.DataHelper.Implementation

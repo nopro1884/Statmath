@@ -1,12 +1,8 @@
 ﻿using Statmath.Application.Task.DataHelper.Implementation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Statmath.Application.Task.DataHelper.Test
 {
-    
     public class PlanConverterTest
     {
         public PlanConverterTest()

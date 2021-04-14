@@ -22,11 +22,17 @@ namespace Statmath.Application.Task.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<ApplicationDbContext>(opt => 
+                    opt.UseNpgsql("Server=localhost; Port=5432; Database=application2; User Id=postgres; Password=password", 
+                        b => b.MigrationsAssembly("Statmath.Application.Task.Api")
+                    )
+                );
 
-            services.AddDbContext<ApplicationDbContext>(opt =>
-            {
-                opt.UseNpgsql("Server=localhost; Port=5432; Database=application; User Id=postgres; Password=password");
-            });
+            //services.AddDbContext<ApplicationDbContext>(opt =>
+            //{
+            //    opt.UseNpgsql("Server=localhost; Port=5432; Database=application; User Id=postgres; Password=password");
+            //});
 
             services.AddSingleton<IDateTimeConverter, DateTimeConverter>();
 

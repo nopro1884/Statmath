@@ -9,11 +9,8 @@ namespace Statmath.Application.Task.DataHelper.Implementation
         {
             // make sure that the structure is complete
             // and the job could be converted into integer
-            if (fields.Length > 3 && int.TryParse(fields[1], out var job))
+            if (fields.Length == 3 && int.TryParse(fields[1], out var job))
             {
-                // 
-                // job == 37349 || job == 37366 -> test conditions
-                
                 return new PlanViewModel
                 {
                     Machine = fields[0],

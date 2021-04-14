@@ -6,21 +6,21 @@ namespace Statmath.Application.Task.DataHelper.Implementation
 {
     public class DateTimeConverter : IDateTimeConverter
     {
-        const string DateTimeFormat = "yyyy-MM-dd-HH-mm";
-        const string DateTimeInvalid = "-";
+        private const string DateTimeFormat = "yyyy-MM-dd-HH-mm";
+        private const string DateTimeInvalid = "-";
 
         // convert datetime in to csv source time format
-        public string ConvertFromDateTime(DateTime date) => date > DateTime.Now 
-                ? DateTimeInvalid 
+        public string ConvertFromDateTime(DateTime date) => date > DateTime.Now
+                ? DateTimeInvalid
                 : date.ToString(DateTimeFormat);
 
-        // convert csv sourve time format in to datetime 
+        // convert csv sourve time format in to datetime
         public DateTime ConvertToDateTime(string date)
         {
             CultureInfo cultureInfo = new CultureInfo("de-DE");
-            
+
             if (DateTime.TryParseExact(date, DateTimeFormat, cultureInfo, DateTimeStyles.None, out var dateTime))
-                return dateTime; 
+                return dateTime;
             else
                 return DateTime.MaxValue;
         }
