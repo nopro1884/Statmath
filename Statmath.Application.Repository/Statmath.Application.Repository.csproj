@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Statmath.Application.DataHelper\Statmath.Application.DataHelper.csproj" />
+    <ProjectReference Include="..\Statmath.Application.Data\Statmath.Application.Data.csproj" />
+    <ProjectReference Include="..\Statmath.Application.Models\Statmath.Application.Models.csproj" />
+  </ItemGroup>
+
+</Project>

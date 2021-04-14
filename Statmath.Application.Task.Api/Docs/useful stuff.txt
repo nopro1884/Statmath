@@ -1,9 +1,0 @@
-﻿https://stacksecrets.com/dot-net-core/connect-net-core-with-postgresql-on-a-docker-container#:~:text=%20Connect%20.NET%20Core%20With%20PostgreSQL%20On%20A,pgAdmin.%20To%20check%20to%20see%20if...%20More%20
-
-https://stackoverflow.com/questions/52536588/your-startup-project-doesnt-reference-microsoft-entityframeworkcore-design
-
-docker run --name postgres-1 -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
-docker exec -it postgres-1 bash
-
-psql -U postgres
-create database application
