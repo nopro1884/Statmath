@@ -1,25 +1,34 @@
-﻿using Microsoft.Extensions.Configuration;
-using Statmath.Application.Client.Common.Abstraction;
+﻿using Statmath.Application.Client.Common;
+using Statmath.Application.Client.Handler.Abstraction;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Statmath.Application.Client
 {
     public class ConsoleApplication
     {
-        private const string ConsolePrefix = "$ ";
+        private readonly ICommandHandler _commandHandler;
 
-        private readonly IConnectionHandler _connectionHandler;
-
-        public ConsoleApplication(IConnectionHandler connectionHandler)
+        public ConsoleApplication(ICommandHandler commandHandler)
         {
-            _connectionHandler = connectionHandler;
+            _commandHandler = commandHandler;
         }
 
         public async Task RunAsync()
         {
-            Console.WriteLine(_connectionHandler == null ? "DI not working" : "DI working fine");
-            Console.ReadLine();
+            bool isActive;
+            do
+            {
+                // print prefix in each line
+                Console.Write(SharedConstants.ConsolePrefix);
+                // catch input from user and handle possible commands 
+                var userInput = Console.ReadLine();
+                isActive = await _commandHandler.HandleCommand(userInput);
+                // give cpu away
+                Thread.Sleep(25);
+            } while (isActive);
+            await Task.CompletedTask;
         }
     }
 }

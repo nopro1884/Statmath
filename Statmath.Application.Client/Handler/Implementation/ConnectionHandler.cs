@@ -1,7 +1,7 @@
-﻿using Statmath.Application.Client.Common.Abstraction;
+﻿using Statmath.Application.Client.Handler.Abstraction;
 using System;
 
-namespace Statmath.Application.Client.Common.Implementation
+namespace Statmath.Application.Client.Handler.Implementation
 {
     public class ConnectionHandler : IConnectionHandler
     {
