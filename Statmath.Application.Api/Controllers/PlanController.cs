@@ -1,58 +1,48 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Statmath.Application.Data.Context;
 using Statmath.Application.Models;
+using Statmath.Application.Repository.Abstraction;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Statmath.Application.Api.Controllers
 {
     public class PlanController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IPlanRepository _planRepository;
         private readonly IMapper _mapper;
 
-        public PlanController(ApplicationDbContext dbContext, IMapper mapper)
+        public PlanController(IPlanRepository planRepository, IMapper mapper)
         {
-            _dbContext = dbContext;
+            _planRepository = planRepository;
             _mapper = mapper;
         }
 
-        //public async Task<IActionResult> Insert([FromBody] PlanViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest("Invalid data received");
-        //    }
-
-
+        [ActionName("create_many")]
+        [HttpPost]
+        public async Task<IActionResult> CreateAsync([FromBody] List<PlanViewModel> viewModels)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    throw new System.Exception($"Objects of {nameof(PlanViewModel)} are not valid in {nameof(PlanController)}");
+                }
+                var models = _mapper.Map<List<PlanViewModel>, List<Plan>>(viewModels).ToList();
+                var entriesWritten = await _planRepository.Add(models);
+                return Ok($"{entriesWritten} plans stored");
+            }
+            catch (System.Exception e)
+            {
+                return BadRequest(e.Message);
+            }
             
-        //}
-        
+        }
 
         public IActionResult Index()
         {
-            var plan = new Plan
-            {
-                Machine = "TEst",
-                Job = 12345,
-                StartedAt = new System.DateTime(1984, 08, 18, 18, 30, 0),
-                EndedAt = new System.DateTime(1984, 08, 20, 18, 30, 0)
-            };
-
-            _dbContext.Plans.Add(plan);
-            
-            _dbContext.SaveChanges();
-
-            var plans = _dbContext.Plans.ToList();
-
             return Ok();
-        }
-
-        [HttpGet(Name = "getall")]
-        public IActionResult GetAll()
-        {
-            var plans = _dbContext.Plans.ToList();
-            return Ok(plans);
         }
     }
 }

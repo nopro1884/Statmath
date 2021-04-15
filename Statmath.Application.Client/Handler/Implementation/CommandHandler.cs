@@ -15,19 +15,21 @@ namespace Statmath.Application.Client.Handler.Implementation
         private readonly IReadCommand _readCommand;
         private readonly IHelpCommand _helpCommand;
         private readonly ICreateCommand _createCommand;
-
+        private readonly IClearCommand _clearCommand;
 
         public CommandHandler(
             IExitCommand exitCommand,
-            IReadCommand readCommand, 
-            IHelpCommand helpCommand, 
-            ICreateCommand createCommand)
+            IReadCommand readCommand,
+            IHelpCommand helpCommand,
+            ICreateCommand createCommand,
+            IClearCommand clearCommand)
         {
             // injected command references
             _exitCommand = exitCommand;
             _readCommand = readCommand;
             _helpCommand = helpCommand;
             _createCommand = createCommand;
+            _clearCommand = clearCommand;
 
             // initialize command dictionary
             _commandDict = new Dictionary<string, Func<IEnumerable<string>, Task<ICommand>>>();
@@ -52,41 +54,27 @@ namespace Statmath.Application.Client.Handler.Implementation
                 userInputFragments = new string[] { string.Empty };
             }
 
-            // 
+            // check if key exists
+            // getting explicit command function for execution
             var possibleCommand = userInputFragments[0];
-            if (_commandDict.ContainsKey(possibleCommand))
+            if (_commandDict.TryGetValue(possibleCommand, out var command))
             {
-                if (_commandDict.TryGetValue(possibleCommand, out var callback))
-                {
-                    // collect args
-                    var args = userInputFragments.Length > 2
-                        ? userInputFragments.ToList().Skip(1)
-                        : null;
-                    // initialize command and execute on finish task
-                    return await callback(args).Result.Execute();
-                }
+                // collect args
+                var args = userInputFragments.ToList().Skip(1);
+                // initialize command and execute on finish task
+                return await command(args).Result.Execute();
             }
-            return await HandleUnknownCommand();
+            Console.WriteLine(SharedConstants.UnknownCommand);
+            return await Task.FromResult(true);
         }
 
         private void InitCommandDictionary()
         {
             _commandDict.Add(SharedConstants.CommandHelp, _helpCommand.Initialize);
             _commandDict.Add(SharedConstants.CommandExit, _exitCommand.Initialize);
-        }
-
-
-        private Task<bool> HandleUnknownCommand()
-        {
-            Console.WriteLine("Unkown command. For more information enter --help");
-            return Task.FromResult(true);
-        }
-
-
-
-        private bool HandleExitCommand(IEnumerable<string> args)
-        {
-            return false;
+            _commandDict.Add(SharedConstants.CommandRead, _readCommand.Initialize);
+            _commandDict.Add(SharedConstants.CommandCreate, _createCommand.Initialize);
+            _commandDict.Add(SharedConstants.CommandClear, _clearCommand.Initialize);
         }
     }
 }

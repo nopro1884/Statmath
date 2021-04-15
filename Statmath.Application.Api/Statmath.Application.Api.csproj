@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Statmath.Application.Data\Statmath.Application.Data.csproj" />
     <ProjectReference Include="..\Statmath.Application.Mapping\Statmath.Application.Mapping.csproj" />
+    <ProjectReference Include="..\Statmath.Application.Repository\Statmath.Application.Repository.csproj" />
   </ItemGroup>
 
 </Project>

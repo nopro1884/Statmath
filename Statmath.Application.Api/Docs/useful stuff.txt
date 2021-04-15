@@ -2,11 +2,16 @@
 
 https://stackoverflow.com/questions/52536588/your-startup-project-doesnt-reference-microsoft-entityframeworkcore-design
 
+
+connectionstring should look like this
+Server=localhost; Port=5432; Database=application2; User Id=postgres; Password=password
+
 docker run --name postgres-1 -e POSTGRES_PASSWORD=password -d -p 5432:5432 postgres
 docker exec -it postgres-1 bash
 
-dotnet ef --startup-project Statmath.Application.Api migrations add InitialMigration -c ApplicationDbContext
-dotnet ef --startup-project Statmath.Application.Api update database
-
 psql -U postgres
 create database application
+
+dotnet ef --startup-project Statmath.Application.Api migrations add InitialMigration -c ApplicationDbContext
+dotnet ef --startup-project Statmath.Application.Api database update
+

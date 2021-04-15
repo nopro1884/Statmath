@@ -16,7 +16,7 @@ namespace Statmath.Application.DataHelper.Implementation
             _converter = converter;
         }
 
-        public bool IsFileInUse(string filePath)
+        public bool IsFileNotInUse(string filePath)
         {
             try
             {
@@ -25,11 +25,11 @@ namespace Statmath.Application.DataHelper.Implementation
                 {
                     stream.Close();
                 }
-                return false;
+                return true;
             }
             catch (IOException)
             {
-                return true;
+                return false;
             }
         }
 

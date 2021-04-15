@@ -1,12 +1,13 @@
 ﻿using Statmath.Application.Data.Context;
 using Statmath.Application.DataHelper.Abstraction;
 using Statmath.Application.Models;
-using Statmath.Application.Repository.Implementation;
+using Statmath.Application.Repository.Abstraction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace Statmath.Application.Repository.Abstraction
+namespace Statmath.Application.Repository.Implementation
 {
     public class PlanRepository : IPlanRepository
     {
@@ -19,12 +20,25 @@ namespace Statmath.Application.Repository.Abstraction
             _dateTimeHelper = dateTimeHelper;
         }
 
-        public void Add(Plan plan)
+        public async Task<int> Add(Plan plan)
         {
             try
             {
                 _context.Plans.Add(plan);
-                _context.SaveChanges();
+                return await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> Add(List<Plan> plans)
+        {
+            try
+            {
+                _context.Plans.AddRange(plans);
+                return await _context.SaveChangesAsync();
             }
             catch (Exception)
             {

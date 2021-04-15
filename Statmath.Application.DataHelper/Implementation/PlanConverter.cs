@@ -9,7 +9,7 @@ namespace Statmath.Application.DataHelper.Implementation
         {
             // make sure that the structure is complete
             // and the job could be converted into integer
-            if (fields.Length == 3 && int.TryParse(fields[1], out var job))
+            if (fields.Length == 4 && int.TryParse(fields[1], out var job))
             {
                 return new PlanViewModel
                 {

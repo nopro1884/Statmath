@@ -23,6 +23,8 @@ namespace Statmath.Application.Data.Configuration
 
             builder.Property(prop => prop.EndedAt)
                 .HasColumnType("TIMESTAMP(0)");
+
+            builder.HasIndex(prop => prop.Job).IsUnique();
         }
     }
 }

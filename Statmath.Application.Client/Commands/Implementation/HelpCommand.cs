@@ -13,7 +13,7 @@ namespace Statmath.Application.Client.Commands.Implementation
             var listing = new List<string>
             {
                 SharedConstants.HorizontalLine,
-                $"{SharedConstants.CommandStore}\t\t\t--> store data from csv file into database",
+                $"{SharedConstants.CommandCreate}\t\t\t--> store data from csv file into database",
                 $"{SharedConstants.CommandRead}\t\t\t--> read data from database",
                 $"{SharedConstants.CommandExit}\t\t\t--> exit application",
                 SharedConstants.HorizontalLine,

@@ -1,13 +1,15 @@
 ﻿using Statmath.Application.Models;
 using System;
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Statmath.Application.Repository.Implementation
+namespace Statmath.Application.Repository.Abstraction
 {
     public interface IPlanRepository
     {
-        void Add(Plan plan);
+        Task<int> Add(Plan plan);
+
+        Task<int> Add(List<Plan> plans);
 
         Plan GetByJob(int job);
 

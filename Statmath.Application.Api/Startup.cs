@@ -8,6 +8,8 @@ using Statmath.Application.Data.Context;
 using Statmath.Application.DataHelper.Abstraction;
 using Statmath.Application.DataHelper.Implementation;
 using Statmath.Application.Mapping;
+using Statmath.Application.Repository.Abstraction;
+using Statmath.Application.Repository.Implementation;
 
 namespace Statmath.Application.Api
 {
@@ -22,19 +24,17 @@ namespace Statmath.Application.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration["ConnectionString"];
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ApplicationDbContext>(opt => 
-                    opt.UseNpgsql("Server=localhost; Port=5432; Database=application2; User Id=postgres; Password=password", 
+                    opt.UseNpgsql(connectionString, 
                         b => b.MigrationsAssembly("Statmath.Application.Api")
                     )
                 );
 
-            //services.AddDbContext<ApplicationDbContext>(opt =>
-            //{
-            //    opt.UseNpgsql("Server=localhost; Port=5432; Database=application; User Id=postgres; Password=password");
-            //});
-
-            services.AddSingleton<IDateTimeConverter, DateTimeConverter>();
+            services.AddScoped<IDateTimeConverter, DateTimeConverter>();
+            services.AddScoped<IDateTimeHelper, DateTimeHelper>();
+            services.AddScoped<IPlanRepository, PlanRepository>();
 
             services.AddAutoMapper(typeof(MapperProfiles));
 

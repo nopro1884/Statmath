@@ -4,6 +4,8 @@ using Statmath.Application.Client.Commands.Abstraction;
 using Statmath.Application.Client.Commands.Implementation;
 using Statmath.Application.Client.Handler.Abstraction;
 using Statmath.Application.Client.Handler.Implementation;
+using Statmath.Application.DataHelper.Abstraction;
+using Statmath.Application.DataHelper.Implementation;
 using System;
 
 namespace Statmath.Application.Client
@@ -12,6 +14,7 @@ namespace Statmath.Application.Client
     {
         private readonly AppSettings _appSettings = new AppSettings();
         private IConfiguration _configuration;
+        private IServiceScope _serviceScope;
         private IServiceProvider _serviceProvider;
 
         public ApplicationSetup()
@@ -19,14 +22,13 @@ namespace Statmath.Application.Client
             _configuration = GetConfiguration();
             _configuration.GetSection(nameof(AppSettings)).Bind(_appSettings);
             _serviceProvider = GetServiceProvider();
+            _serviceScope = _serviceProvider.CreateScope();
         }
 
         public ConsoleApplication GetAppContext()
         {
-            // create scope of service provider
-            var scope = _serviceProvider.CreateScope();
             // aquire main console app class
-            return scope.ServiceProvider.GetService<ConsoleApplication>();
+            return _serviceScope.ServiceProvider.GetService<ConsoleApplication>();
         }
 
         private  IConfiguration GetConfiguration()
@@ -45,15 +47,19 @@ namespace Statmath.Application.Client
             var services = new ServiceCollection();
             // provide app settings
             services.AddSingleton(typeof(AppSettings), _appSettings);
+            // common app stuff
+            services.AddSingleton<IPlanConverter, PlanConverter>();
+            services.AddSingleton<ICsvHelper, CsvHelper>();
             // provide commands
-            services.AddSingleton<ICreateCommand, CreateCommand>();
-            services.AddSingleton<IReadCommand, ReadCommand>();
-            services.AddSingleton<IExitCommand, ExitCommand>();
-            services.AddSingleton<IHelpCommand, HelpCommand>();
+            services.AddTransient<ICreateCommand, CreateCommand>();
+            services.AddTransient<IReadCommand, ReadCommand>();
+            services.AddTransient<IExitCommand, ExitCommand>();
+            services.AddTransient<IHelpCommand, HelpCommand>();
+            services.AddTransient<IClearCommand, ClearCommand>();
             // provide handler
-            services.AddSingleton<ICommandHandler, CommandHandler>();
-            services.AddSingleton<IConnectionHandler, ConnectionHandler>();
-            services.AddSingleton<ConsoleApplication>();
+            services.AddTransient<ICommandHandler, CommandHandler>();
+            services.AddTransient<IConnectionHandler, ConnectionHandler>();
+            services.AddScoped<ConsoleApplication>();
             return services.BuildServiceProvider();
         }
 

@@ -5,7 +5,7 @@ namespace Statmath.Application.DataHelper.Abstraction
 {
     public interface ICsvHelper
     {
-        public bool IsFileInUse(string filePath);
+        public bool IsFileNotInUse(string filePath);
         IEnumerable<PlanViewModel> ReadCsvFile(string filePath, bool isHeaderIncluded = false);
 
     }
