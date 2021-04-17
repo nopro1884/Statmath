@@ -13,11 +13,17 @@ namespace Statmath.Application.Repository.Implementation
     {
         public ApplicationDbContext _context { get; }
         public IDateTimeHelper _dateTimeHelper { get; }
+        public IDateTimeConverter _dateTimeConverter { get; }
 
-        public PlanRepository(ApplicationDbContext context, IDateTimeHelper dateTimeHelper)
+        public PlanRepository(
+            ApplicationDbContext context,
+            IDateTimeHelper dateTimeHelper,
+            IDateTimeConverter dateTimeConverter
+            )
         {
             _context = context;
             _dateTimeHelper = dateTimeHelper;
+            _dateTimeConverter = dateTimeConverter;
         }
 
         public async Task<int> Add(Plan plan)
@@ -49,11 +55,17 @@ namespace Statmath.Application.Repository.Implementation
         public IEnumerable<Plan> GetAll()
             => _context.Plans.ToList();
 
-        public IEnumerable<Plan> GetByEndDate(DateTime date) =>
-            _context.Plans.Where(p => _dateTimeHelper.IsDayEqual(p.EndedAt, date));
+        public IEnumerable<Plan> GetByEndDate(string date)
+        {
+            var dateTime = _dateTimeConverter.ConvertToDateTime(date);
+            return _context.Plans.Where(p => _dateTimeHelper.IsDayEqual(p.EndedAt, dateTime));
+        }
 
-        public IEnumerable<Plan> GetByStartDate(DateTime date)
-            => _context.Plans.Where(p => _dateTimeHelper.IsDayEqual(p.StartedAt, date));
+        public IEnumerable<Plan> GetByStartDate(string date)
+        {
+            var dateTime = _dateTimeConverter.ConvertToDateTime(date);
+            return _context.Plans.Where(p => _dateTimeHelper.IsDayEqual(p.StartedAt, dateTime));
+        }
 
         public Plan GetByJob(int job)
             => _context.Plans.FirstOrDefault(p => p.Job == job);

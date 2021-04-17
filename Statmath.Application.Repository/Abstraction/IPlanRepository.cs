@@ -15,9 +15,9 @@ namespace Statmath.Application.Repository.Abstraction
 
         IEnumerable<Plan> GetByMachineName(string machineName);
 
-        IEnumerable<Plan> GetByStartDate(DateTime date);
+        IEnumerable<Plan> GetByStartDate(string date);
 
-        IEnumerable<Plan> GetByEndDate(DateTime date);
+        IEnumerable<Plan> GetByEndDate(string date);
 
         IEnumerable<Plan> GetAll();
     }

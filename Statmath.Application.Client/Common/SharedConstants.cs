@@ -1,6 +1,6 @@
 ﻿namespace Statmath.Application.Client.Common
 {
-    public class SharedConstants
+    internal class SharedConstants
     { 
         public const string ConsolePrefix = "$ ";
         public const string UnknownCommand = "Unkown command. For more information enter: help";

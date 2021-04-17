@@ -25,7 +25,7 @@ namespace Statmath.Application.Client
                 // catch input from user and handle possible commands 
                 var userInput = Console.ReadLine();
                 isActive = await _commandHandler.HandleCommand(userInput);
-                // give cpu away
+                // let it breath
                 Thread.Sleep(25);
             } while (isActive);
             await Task.CompletedTask;

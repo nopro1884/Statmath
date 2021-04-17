@@ -21,7 +21,7 @@ namespace Statmath.Application.Client.Commands.Abstraction
             _csvHelper = csvHelper;
         }
 
-        public Task<bool> Execute()
+        public async Task<bool> Execute()
         {
             // check for existence or at least one argument
             if (_args?.Any() ?? false)
@@ -34,15 +34,18 @@ namespace Statmath.Application.Client.Commands.Abstraction
                         try
                         {
                             var foo = _csvHelper.ReadCsvFile(filePath).ToList();
-                            _connectionHandler.CreatePlans(foo);
+                            await _connectionHandler.CreatePlans(foo);
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine(SharedConstants.CommandCreateUnreadable);
+                            Console.WriteLine(SharedConstants.CommandCreateInvalid);
                         }
                     }
-                    // file already is use
-                    Console.WriteLine(SharedConstants.CommandCreateFileNotFound);
+                    else
+                    {
+                        // file already is use
+                        Console.WriteLine(SharedConstants.CommandCreateUnreadable);
+                    }
                 }
                 else
                 {
@@ -50,7 +53,7 @@ namespace Statmath.Application.Client.Commands.Abstraction
                     Console.WriteLine(SharedConstants.CommandCreateFileNotFound);
                 }
             }
-            return Task.FromResult(true);
+            return true;
         }
 
         public virtual Task<ICommand> Initialize(IEnumerable<string> args)
