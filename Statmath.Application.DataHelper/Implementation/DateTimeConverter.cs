@@ -17,12 +17,13 @@ namespace Statmath.Application.DataHelper.Implementation
         // convert csv sourve time format in to datetime
         public DateTime ConvertToDateTime(string date)
         {
+            date = date.Length == 10 ? date + "-00-00" : date;
             CultureInfo cultureInfo = new CultureInfo("de-DE");
 
             if (DateTime.TryParseExact(date, DateTimeFormat, cultureInfo, DateTimeStyles.None, out var dateTime))
                 return dateTime;
             else
-                return DateTime.MaxValue;
+                return DateTime.MaxValue.Subtract(new TimeSpan(1, 0, 0, 0));
         }
     }
 }

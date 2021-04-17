@@ -19,12 +19,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Statmath.Application.DataHelper\Statmath.Application.DataHelper.csproj" />
+    <ProjectReference Include="..\Statmath.Application.Shared\Statmath.Application.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\" />
   </ItemGroup>
 
 </Project>

@@ -55,10 +55,11 @@ namespace Statmath.Application.Client
             services.AddTransient<IReadCommand, ReadCommand>();
             services.AddTransient<IExitCommand, ExitCommand>();
             services.AddTransient<IHelpCommand, HelpCommand>();
+            services.AddTransient<IPrintHandler, PrintHandler>();
             services.AddTransient<IClearCommand, ClearCommand>();
             // provide handler
             services.AddTransient<ICommandHandler, CommandHandler>();
-            services.AddTransient<IConnectionHandler, ConnectionHandler>();
+            services.AddTransient<IPlanConnectionHandler, PlanConnectionHandler>();
             services.AddScoped<ConsoleApplication>();
             return services.BuildServiceProvider();
         }

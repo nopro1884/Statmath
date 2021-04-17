@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Statmath.Application.Api.Common;
 using Statmath.Application.Models;
 using Statmath.Application.Repository.Abstraction;
+using Statmath.Application.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +23,8 @@ namespace Statmath.Application.Api.Controllers
 
         private string CreateUnableGetDataMessage(dynamic parameter)
         {
-            var msg = SharedConstants.UnableToGetDataMessagePlaceholder
-                    .Replace(SharedConstants.UnableToGetDataMessagePlaceholder,
+            var msg = Constants.UnableToGetDataMessagePlaceholder
+                    .Replace(Constants.UnableToGetDataMessagePlaceholder,
                         parameter is string ? parameter : Convert.ToString(parameter));
             return msg;
         }
@@ -124,19 +124,54 @@ namespace Statmath.Application.Api.Controllers
         {
             try
             {
-                var models = default(IEnumerable<Plan>);
+                var models = default(List<Plan>);
                 switch (t)
                 {
                     case "start":
-                        models = _planRepository.GetByStartDate(d);
+                        models = _planRepository.GetByStartDate(d).ToList();
                         break;
                     case "end":
-                        models = _planRepository.GetByEndDate(d);
+                        models = _planRepository.GetByEndDate(d).ToList();
                         break;
                     default:
                         return BadRequest(CreateUnableGetDataMessage(t));
                 }
-                var viewModels = _mapper.Map<List<Plan>, List<PlanViewModel>>(models?.ToList());
+                
+                var viewModels = _mapper.Map<List<Plan>, List<PlanViewModel>>(models);
+                return Ok(viewModels);
+            }
+            catch (Exception)
+            {
+                return BadRequest(CreateUnableGetDataMessage(d));
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t">type of job state -> like end or start</param>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        [ActionName("get_by_datetime")]
+        [HttpGet]
+        public IActionResult GetByDateTime([FromQuery] string t, [FromQuery] string d)
+        {
+            try
+            {
+                var models = default(List<Plan>);
+                switch (t)
+                {
+                    case "start":
+                        models = _planRepository.GetByStartDateTime(d).ToList();
+                        break;
+                    case "end":
+                        models = _planRepository.GetByEndDateTime(d).ToList();
+                        break;
+                    default:
+                        return BadRequest(CreateUnableGetDataMessage(t));
+                }
+
+                var viewModels = _mapper.Map<List<Plan>, List<PlanViewModel>>(models);
                 return Ok(viewModels);
             }
             catch (Exception)
@@ -159,7 +194,7 @@ namespace Statmath.Application.Api.Controllers
             }
             catch (Exception)
             {
-                return BadRequest(SharedConstants.UnableToGetDataMessage);
+                return BadRequest(Constants.UnableToGetDataMessage);
             }
         }
     }

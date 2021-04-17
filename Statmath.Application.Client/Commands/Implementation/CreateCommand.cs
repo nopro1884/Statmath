@@ -1,6 +1,6 @@
-﻿using Statmath.Application.Client.Common;
-using Statmath.Application.Client.Handler.Abstraction;
+﻿using Statmath.Application.Client.Handler.Abstraction;
 using Statmath.Application.DataHelper.Abstraction;
+using Statmath.Application.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,11 +11,11 @@ namespace Statmath.Application.Client.Commands.Abstraction
 {
     public class CreateCommand : ICreateCommand
     {
-        private readonly IConnectionHandler _connectionHandler;
+        private readonly IPlanConnectionHandler _connectionHandler;
         private readonly ICsvHelper _csvHelper;
         private List<string> _args;
 
-        public CreateCommand(IConnectionHandler connectionHandler, ICsvHelper csvHelper)
+        public CreateCommand(IPlanConnectionHandler connectionHandler, ICsvHelper csvHelper)
         {
             _connectionHandler = connectionHandler;
             _csvHelper = csvHelper;
@@ -38,19 +38,19 @@ namespace Statmath.Application.Client.Commands.Abstraction
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine(SharedConstants.CommandCreateInvalid);
+                            Console.WriteLine(Constants.CommandCreateInvalid);
                         }
                     }
                     else
                     {
                         // file already is use
-                        Console.WriteLine(SharedConstants.CommandCreateUnreadable);
+                        Console.WriteLine(Constants.CommandCreateUnreadable);
                     }
                 }
                 else
                 {
                     // file not found
-                    Console.WriteLine(SharedConstants.CommandCreateFileNotFound);
+                    Console.WriteLine(Constants.CommandCreateFileNotFound);
                 }
             }
             return true;

@@ -1,5 +1,5 @@
-﻿using Statmath.Application.Client.Common;
-using Statmath.Application.Client.Handler.Abstraction;
+﻿using Statmath.Application.Client.Handler.Abstraction;
+using Statmath.Application.Shared;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +21,7 @@ namespace Statmath.Application.Client
             do
             {
                 // print prefix in each line
-                Console.Write(SharedConstants.ConsolePrefix);
+                Console.Write(Constants.ConsolePrefix);
                 // catch input from user and handle possible commands 
                 var userInput = Console.ReadLine();
                 isActive = await _commandHandler.HandleCommand(userInput);

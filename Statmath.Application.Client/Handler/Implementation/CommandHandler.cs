@@ -1,6 +1,6 @@
 ﻿using Statmath.Application.Client.Commands.Abstraction;
-using Statmath.Application.Client.Common;
 using Statmath.Application.Client.Handler.Abstraction;
+using Statmath.Application.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +45,7 @@ namespace Statmath.Application.Client.Handler.Implementation
                 userInputFragments = userInput
                     .TrimStart()
                     .TrimEnd()
-                    .Split(SharedConstants.CommandDelimiter);
+                    .Split(Constants.CommandDelimiter);
             }
             catch (Exception)
             {
@@ -56,25 +56,33 @@ namespace Statmath.Application.Client.Handler.Implementation
 
             // check if key exists
             // getting explicit command function for execution
-            var possibleCommand = userInputFragments[0];
-            if (_commandDict.TryGetValue(possibleCommand, out var command))
+            try
             {
-                // collect args
-                var args = userInputFragments.ToList().Skip(1);
-                // initialize command and execute on finish task
-                return await command(args).Result.Execute();
+                var possibleCommand = userInputFragments[0];
+                if (_commandDict.TryGetValue(possibleCommand, out var command))
+                {
+                    // collect args
+                    var args = userInputFragments.ToList().Skip(1);
+                    // initialize command and execute on finish task
+                    return await command(args).Result.Execute();
+                }
+                Console.WriteLine(Constants.UnknownCommand);
             }
-            Console.WriteLine(SharedConstants.UnknownCommand);
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+            }
             return await Task.FromResult(true);
         }
 
         private void InitCommandDictionary()
         {
-            _commandDict.Add(SharedConstants.CommandHelp, _helpCommand.Initialize);
-            _commandDict.Add(SharedConstants.CommandExit, _exitCommand.Initialize);
-            _commandDict.Add(SharedConstants.CommandRead, _readCommand.Initialize);
-            _commandDict.Add(SharedConstants.CommandCreate, _createCommand.Initialize);
-            _commandDict.Add(SharedConstants.CommandClear, _clearCommand.Initialize);
+            _commandDict.Add(Constants.CommandHelp, _helpCommand.Initialize);
+            _commandDict.Add(Constants.CommandExit, _exitCommand.Initialize);
+            _commandDict.Add(Constants.CommandRead, _readCommand.Initialize);
+            _commandDict.Add(Constants.CommandCreate, _createCommand.Initialize);
+            _commandDict.Add(Constants.CommandClear, _clearCommand.Initialize);
         }
     }
 }

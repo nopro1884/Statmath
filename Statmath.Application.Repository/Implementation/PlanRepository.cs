@@ -58,13 +58,25 @@ namespace Statmath.Application.Repository.Implementation
         public IEnumerable<Plan> GetByEndDate(string date)
         {
             var dateTime = _dateTimeConverter.ConvertToDateTime(date);
-            return _context.Plans.Where(p => _dateTimeHelper.IsDayEqual(p.EndedAt, dateTime));
+            return _context.Plans.ToList().Where(p => _dateTimeHelper.IsDayEqual(p.EndedAt, dateTime));
         }
 
         public IEnumerable<Plan> GetByStartDate(string date)
         {
             var dateTime = _dateTimeConverter.ConvertToDateTime(date);
-            return _context.Plans.Where(p => _dateTimeHelper.IsDayEqual(p.StartedAt, dateTime));
+            return _context.Plans.ToList().Where(p => _dateTimeHelper.IsDayEqual(p.StartedAt, dateTime));
+        }
+
+        public IEnumerable<Plan> GetByEndDateTime(string date)
+        {
+            var dateTime = _dateTimeConverter.ConvertToDateTime(date);
+            return _context.Plans.Where(p => p.EndedAt.Equals(dateTime));
+        }
+
+        public IEnumerable<Plan> GetByStartDateTime(string date)
+        {
+            var dateTime = _dateTimeConverter.ConvertToDateTime(date);
+            return _context.Plans.Where(p => p.StartedAt.Equals(dateTime));
         }
 
         public Plan GetByJob(int job)
