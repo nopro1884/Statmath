@@ -6,8 +6,10 @@ namespace Statmath.Application.Client.Handler.Abstraction
 {
     public interface IPlanConnectionHandler
     {
-        Task CreatePlan(PlanViewModel viewModel);
-        Task CreatePlans(IEnumerable<PlanViewModel> viewModels);
+        Task<int> DeleteAll();
+        Task<int> Delete(PlanViewModel viewModel);
+        Task<string> CreatePlan(PlanViewModel viewModel);
+        Task<string> CreatePlans(IEnumerable<PlanViewModel> viewModels);
         Task<ICollection<PlanViewModel>> GetAll();
         Task<PlanViewModel> GetByJob(int job);
         Task<ICollection<PlanViewModel>> GetByMachine(string machine);

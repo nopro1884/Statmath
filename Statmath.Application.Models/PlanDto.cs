@@ -1,10 +1,14 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Statmath.Application.Models
 {
-    public class Plan
+    [Table(TableName)]
+    public class PlanDto
     {
-        public Plan()
+        public const string TableName = "Plans";
+
+        public PlanDto()
         {
             Id = Guid.NewGuid();
         }

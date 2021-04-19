@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Statmath.Application.Exceptions\Statmath.Application.Exceptions.csproj" />
     <ProjectReference Include="..\Statmath.Application.Models\Statmath.Application.Models.csproj" />
   </ItemGroup>
 

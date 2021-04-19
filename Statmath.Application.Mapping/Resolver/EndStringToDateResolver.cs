@@ -5,7 +5,7 @@ using System;
 
 namespace Statmath.Application.Mapping.Resolver
 {
-    public class EndStringToDateResolver : IValueResolver<PlanViewModel, Plan, DateTime>
+    public class EndStringToDateResolver : IValueResolver<PlanViewModel, PlanDto, DateTime>
     {
         private readonly IDateTimeConverter _dateTimeConverter;
 
@@ -14,7 +14,7 @@ namespace Statmath.Application.Mapping.Resolver
             _dateTimeConverter = dateTimeConverter;
         }
 
-        public DateTime Resolve(PlanViewModel source, Plan destination, DateTime destMember, ResolutionContext context)
+        public DateTime Resolve(PlanViewModel source, PlanDto destination, DateTime destMember, ResolutionContext context)
             => _dateTimeConverter.ConvertToDateTime(source.End);
     }
 }

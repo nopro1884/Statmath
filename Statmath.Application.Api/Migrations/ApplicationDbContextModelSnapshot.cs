@@ -19,12 +19,12 @@ namespace Statmath.Application.Api.Migrations
                 .HasAnnotation("ProductVersion", "3.1.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Statmath.Application.Models.Plan", b =>
+            modelBuilder.Entity("Statmath.Application.Models.PlanDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValue(new Guid("4dee0cc0-e106-4536-b650-0ea4e4865826"));
+                        .HasDefaultValue(new Guid("452dd4c6-728b-4a4d-a934-8a96f899d38c"));
 
                     b.Property<DateTime>("EndedAt")
                         .HasColumnType("TIMESTAMP(0)");

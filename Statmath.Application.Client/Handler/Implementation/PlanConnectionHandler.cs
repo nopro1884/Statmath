@@ -122,16 +122,74 @@ namespace Statmath.Application.Client.Handler.Implementation
             }
         }
 
-        public async Task CreatePlan(PlanViewModel viewModel)
+        private async Task<int> MakeDeleteRequest(string action, dynamic payload = null)
         {
-            var response = await MakePostRequest("create", viewModel);
-            Console.WriteLine(response);
+            HttpWebRequest request;
+
+            try
+            {
+                request = (HttpWebRequest) WebRequest.Create($"{_uri}/{action}");
+                request.Method = "DELETE";
+                if (payload != null)
+                {
+                    var json = JsonConvert.SerializeObject(payload);
+                    request.ContentType = "application/json";
+                    request.ContentLength = json.Length;
+                    request.AutomaticDecompression = DecompressionMethods.GZip;
+                    using var webStream = request.GetRequestStream();
+                    using var requestWriter = new StreamWriter(webStream, System.Text.Encoding.ASCII);
+                    requestWriter.Write(json);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Unable to create Web Request");
+                throw;
+            }
+            try
+            {
+                WebResponse webResponse = await request.GetResponseAsync();
+                using Stream webStream = webResponse.GetResponseStream() ?? Stream.Null;
+                using StreamReader responseReader = new StreamReader(webStream);
+                string response = responseReader.ReadToEnd();
+                if (int.TryParse(response, out var affectedRows))
+                {
+                    return affectedRows;
+                }
+                throw new Exception("Unexpected response from Server");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unable to get Web Resonse");
+#if DEBUG
+                Console.WriteLine(e.Message);
+#endif
+                throw;
+            }
         }
 
-        public async Task CreatePlans(IEnumerable<PlanViewModel> viewModels)
+        public async Task<int> DeleteAll()
         {
-            var response = await MakePostRequest("create_many", viewModels);
-            Console.WriteLine(response);
+            var response = await MakeDeleteRequest(Constants.ApiActionDeleteMany);
+            return response;
+        }
+
+        public async Task<int> Delete(PlanViewModel viewModel)
+        {
+            var response = await MakeDeleteRequest(Constants.ApiActionDelete, viewModel);
+            return response;
+        }
+
+        public async Task<string> CreatePlan(PlanViewModel viewModel)
+        {
+            var response = await MakePostRequest(Constants.ApiActionCreate, viewModel);
+            return response;
+        }
+
+        public async Task<string> CreatePlans(IEnumerable<PlanViewModel> viewModels)
+        {
+            var response = await MakePostRequest(Constants.ApiActionCreateMany, viewModels);
+            return response;
         }
 
         public async Task<ICollection<PlanViewModel>> GetAll()
@@ -177,5 +235,7 @@ namespace Statmath.Application.Client.Handler.Implementation
             var response = await MakeGetRequest<ICollection<PlanViewModel>>(Constants.ApiActionGetByDateTime, queryParameters);
             return response;
         }
+
+
     }
 }

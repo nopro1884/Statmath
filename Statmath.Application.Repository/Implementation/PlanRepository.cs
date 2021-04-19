@@ -26,11 +26,11 @@ namespace Statmath.Application.Repository.Implementation
             _dateTimeConverter = dateTimeConverter;
         }
 
-        public async Task<int> Add(Plan plan)
+        public async Task<int> Add(PlanDto dto)
         {
             try
             {
-                _context.Plans.Add(plan);
+                _context.Plans.Add(dto);
                 return await _context.SaveChangesAsync();
             }
             catch (Exception)
@@ -39,11 +39,11 @@ namespace Statmath.Application.Repository.Implementation
             }
         }
 
-        public async Task<int> Add(List<Plan> plans)
+        public async Task<int> Add(IEnumerable<PlanDto> dtos)
         {
             try
             {
-                _context.Plans.AddRange(plans);
+                _context.Plans.AddRange(dtos);
                 return await _context.SaveChangesAsync();
             }
             catch (Exception)
@@ -52,37 +52,75 @@ namespace Statmath.Application.Repository.Implementation
             }
         }
 
-        public IEnumerable<Plan> GetAll()
+        public async Task<int> Delete(PlanDto dto)
+        {
+            try
+            {
+                var plan  = _context.Plans.Where(x => x.Id == dto.Id);
+                if (plan != default(PlanDto))
+                {
+                    _context.Plans.Remove(dto);
+                    return await _context.SaveChangesAsync();
+                }
+                return 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<int> Delete()
+        {
+            try
+            {
+                var plans = _context.Plans;
+                if (plans?.Any() ?? false)
+                {
+                    _context.Plans.RemoveRange(plans);
+                    return await _context.SaveChangesAsync();
+                }
+                return 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public IEnumerable<PlanDto> GetAll()
             => _context.Plans.ToList();
 
-        public IEnumerable<Plan> GetByEndDate(string date)
+        public IEnumerable<PlanDto> GetByEndDate(string date)
         {
             var dateTime = _dateTimeConverter.ConvertToDateTime(date);
             return _context.Plans.ToList().Where(p => _dateTimeHelper.IsDayEqual(p.EndedAt, dateTime));
         }
 
-        public IEnumerable<Plan> GetByStartDate(string date)
+        public IEnumerable<PlanDto> GetByStartDate(string date)
         {
             var dateTime = _dateTimeConverter.ConvertToDateTime(date);
             return _context.Plans.ToList().Where(p => _dateTimeHelper.IsDayEqual(p.StartedAt, dateTime));
         }
 
-        public IEnumerable<Plan> GetByEndDateTime(string date)
+        public IEnumerable<PlanDto> GetByEndDateTime(string date)
         {
             var dateTime = _dateTimeConverter.ConvertToDateTime(date);
             return _context.Plans.Where(p => p.EndedAt.Equals(dateTime));
         }
 
-        public IEnumerable<Plan> GetByStartDateTime(string date)
+        public IEnumerable<PlanDto> GetByStartDateTime(string date)
         {
             var dateTime = _dateTimeConverter.ConvertToDateTime(date);
             return _context.Plans.Where(p => p.StartedAt.Equals(dateTime));
         }
 
-        public Plan GetByJob(int job)
+        public PlanDto GetByJob(int job)
             => _context.Plans.FirstOrDefault(p => p.Job == job);
 
-        public IEnumerable<Plan> GetByMachineName(string machine)
+        public IEnumerable<PlanDto> GetByMachineName(string machine)
             => _context.Plans.Where(p => p.Machine == machine);
+
+
     }
 }

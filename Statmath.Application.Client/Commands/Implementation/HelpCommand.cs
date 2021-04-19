@@ -15,6 +15,7 @@ namespace Statmath.Application.Client.Commands.Implementation
                 Constants.HorizontalLine,
                 $"{Constants.CommandCreate}\t\t\t--> store data from csv file into database",
                 $"{Constants.CommandRead}\t\t\t--> read data from database",
+                $"{Constants.CommandDelete}\t\t\t--> delete entries",
                 $"{Constants.CommandExit}\t\t\t--> exit application",
                 Constants.HorizontalLine,
             };

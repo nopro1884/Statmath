@@ -1,5 +1,6 @@
 ﻿using Statmath.Application.Client.Handler.Abstraction;
 using Statmath.Application.DataHelper.Abstraction;
+using Statmath.Application.Exceptions;
 using Statmath.Application.Shared;
 using System;
 using System.Collections.Generic;
@@ -23,38 +24,57 @@ namespace Statmath.Application.Client.Commands.Abstraction
 
         public async Task<bool> Execute()
         {
-            // check for existence or at least one argument
-            if (_args?.Any() ?? false)
+            // args not available or empty
+            if (_args == default(List<string>) || !_args.Any())
             {
-                var filePath = _args.First();
-                if (File.Exists(filePath))
+                Console.WriteLine(Constants.CommandCreateNoPath);
+                return true;
+            }
+
+            // to many arguments
+            if (_args.Count() > 1)
+            {
+                Console.WriteLine(Constants.CommandCreateToManyArgs);
+                return true;
+            }
+
+            var filePath = _args.First();
+            // file not found
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine(Constants.CommandCreateFileNotFound);
+                return true;
+            }
+
+            var errMsg = string.Empty;
+            try
+            {
+                // file not in use by another programm
+                if (_csvHelper.IsFileNotInUse(filePath))
                 {
-                    if (_csvHelper.IsFileNotInUse(filePath))
-                    {
-                        try
-                        {
-                            var foo = _csvHelper.ReadCsvFile(filePath).ToList();
-                            await _connectionHandler.CreatePlans(foo);
-                        }
-                        catch (Exception)
-                        {
-                            Console.WriteLine(Constants.CommandCreateInvalid);
-                        }
-                    }
-                    else
-                    {
-                        // file already is use
-                        Console.WriteLine(Constants.CommandCreateUnreadable);
-                    }
+                    var data = _csvHelper.ReadCsvFile(filePath).ToList();
+                    var response = await _connectionHandler.CreatePlans(data);
+                    Console.WriteLine(response);
+                    return true;
                 }
-                else
-                {
-                    // file not found
-                    Console.WriteLine(Constants.CommandCreateFileNotFound);
-                }
+            }
+            catch (FileAlreadyInUseException e)
+            {
+                errMsg = e.Message;
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+            // print error message to console if any error had thown
+            if (!string.IsNullOrWhiteSpace(errMsg))
+            {
+                Console.WriteLine(errMsg);
             }
             return true;
         }
+
+        
 
         public virtual Task<ICommand> Initialize(IEnumerable<string> args)
         {

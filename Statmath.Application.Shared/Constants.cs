@@ -4,6 +4,7 @@
     {
         public const string ConsolePrefix = "$ ";
         public const string UnknownCommand = "Unknown command. For more information enter: help";
+        public const string UnknownCommandWrongArg = "At least one invalid command. Aborted";
 
         // commands
         public const string CommandExit = "exit";
@@ -11,13 +12,17 @@
         public const string CommandClear = "clr";
         public const char CommandDelimiter = ' ';
 
+        // delete Command
+        public const string CommandDelete = "delete";
+
         // read command
         public const string CommandRead = "read";
         public const string CommandReadInvalidCommand = "Unknown command. Enter read --help for more information";
 
         // create command
         public const string CommandCreate = "create";
-        public const string CommandCreateUnkown = "Invalid create command. For more information enter: create help";
+        public const string CommandCreateNoPath = "Path to file not found. Enter \"create <path>\"";
+        public const string CommandCreateToManyArgs = "To many arguments. Enter \"create <path>\"";
         public const string CommandCreateFileNotFound = "The file you entered is not existing";
         public const string CommandCreateUnreadable = "The file you entered is not readable";
         public const string CommandCreateInvalid = "The file you entered is not valid";
@@ -33,6 +38,8 @@
         public const string CmdArgHelp = "--help";
 
         // Api Actions
+        public const string ApiActionDeleteMany = "delete_many";
+        public const string ApiActionDelete = "delete";
         public const string ApiActionCreateMany = "create_many";
         public const string ApiActionCreate = "create";
         public const string ApiActionGetAll = "get_all";

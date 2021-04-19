@@ -16,13 +16,15 @@ namespace Statmath.Application.Client.Handler.Implementation
         private readonly IHelpCommand _helpCommand;
         private readonly ICreateCommand _createCommand;
         private readonly IClearCommand _clearCommand;
+        private readonly IDeleteCommand _deleteCommand;
 
         public CommandHandler(
             IExitCommand exitCommand,
             IReadCommand readCommand,
             IHelpCommand helpCommand,
             ICreateCommand createCommand,
-            IClearCommand clearCommand)
+            IClearCommand clearCommand,
+            IDeleteCommand deleteCommand)
         {
             // injected command references
             _exitCommand = exitCommand;
@@ -30,6 +32,7 @@ namespace Statmath.Application.Client.Handler.Implementation
             _helpCommand = helpCommand;
             _createCommand = createCommand;
             _clearCommand = clearCommand;
+            _deleteCommand = deleteCommand;
 
             // initialize command dictionary
             _commandDict = new Dictionary<string, Func<IEnumerable<string>, Task<ICommand>>>();
@@ -83,6 +86,7 @@ namespace Statmath.Application.Client.Handler.Implementation
             _commandDict.Add(Constants.CommandRead, _readCommand.Initialize);
             _commandDict.Add(Constants.CommandCreate, _createCommand.Initialize);
             _commandDict.Add(Constants.CommandClear, _clearCommand.Initialize);
+            _commandDict.Add(Constants.CommandDelete, _deleteCommand.Initialize);
         }
     }
 }

@@ -57,6 +57,7 @@ namespace Statmath.Application.Client
             services.AddTransient<IHelpCommand, HelpCommand>();
             services.AddTransient<IPrintHandler, PrintHandler>();
             services.AddTransient<IClearCommand, ClearCommand>();
+            services.AddTransient<IDeleteCommand, DeleteCommand>();
             // provide handler
             services.AddTransient<ICommandHandler, CommandHandler>();
             services.AddTransient<IPlanConnectionHandler, PlanConnectionHandler>();

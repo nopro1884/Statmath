@@ -1,4 +1,5 @@
 ﻿using Statmath.Application.DataHelper.Abstraction;
+using Statmath.Application.Exceptions;
 using Statmath.Application.Models;
 using System.Collections.Generic;
 using System.IO;
@@ -20,16 +21,15 @@ namespace Statmath.Application.DataHelper.Implementation
         {
             try
             {
+                // try to open a read only file stream 
+                // stream will be close instantly after creation
                 FileInfo file = new FileInfo(filePath);
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
+                file.Open(FileMode.Open, FileAccess.Read, FileShare.None).Close();
                 return true;
             }
             catch (IOException)
             {
-                return false;
+                throw new FileAlreadyInUseException(filePath);
             }
         }
 

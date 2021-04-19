@@ -11,7 +11,7 @@ namespace Statmath.Application.Api.Migrations
                 name: "Plans",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false, defaultValue: new Guid("4dee0cc0-e106-4536-b650-0ea4e4865826")),
+                    Id = table.Column<Guid>(nullable: false, defaultValue: new Guid("452dd4c6-728b-4a4d-a934-8a96f899d38c")),
                     Machine = table.Column<string>(maxLength: 10, nullable: false),
                     Job = table.Column<int>(nullable: false),
                     StartedAt = table.Column<DateTime>(type: "TIMESTAMP(0)", nullable: false),

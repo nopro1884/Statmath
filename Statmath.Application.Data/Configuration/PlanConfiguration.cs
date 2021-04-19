@@ -4,9 +4,9 @@ using Statmath.Application.Models;
 
 namespace Statmath.Application.Data.Configuration
 {
-    public class PlanConfiguration : IEntityTypeConfiguration<Plan>
+    public class PlanConfiguration : IEntityTypeConfiguration<PlanDto>
     {
-        public void Configure(EntityTypeBuilder<Plan> builder)
+        public void Configure(EntityTypeBuilder<PlanDto> builder)
         {
             builder.HasKey(prop => prop.Id)
                 .HasName("id");

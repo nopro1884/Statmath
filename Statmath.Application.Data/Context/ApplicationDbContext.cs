@@ -24,11 +24,11 @@ namespace Statmath.Application.Data.Context
             modelBuilder.ApplyConfiguration(new PlanConfiguration());
 
             // default behavior if guid is not set on add plan entity
-            modelBuilder.Entity<Plan>().Property(x => x.Id).HasDefaultValue(Guid.NewGuid());
+            modelBuilder.Entity<PlanDto>().Property(x => x.Id).HasDefaultValue(Guid.NewGuid());
 
             base.OnModelCreating(modelBuilder);
         }
 
-        public virtual DbSet<Plan> Plans { get; set; }
+        public virtual DbSet<PlanDto> Plans { get; set; }
     }
 }
