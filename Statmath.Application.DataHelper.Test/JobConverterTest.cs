@@ -3,14 +3,14 @@ using Xunit;
 
 namespace Statmath.Application.DataHelper.Test
 {
-    public class PlanConverterTest
+    public class JobConverterTest
     {
-        public PlanConverterTest()
+        public JobConverterTest()
         {
-            _converter = new PlanConverter();
+            _converter = new JobConverter();
         }
 
-        public PlanConverter _converter { get; }
+        public JobConverter _converter { get; }
 
         [Fact]
         public void ConvertFromCsvToViewModel()

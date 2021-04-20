@@ -15,6 +15,7 @@ namespace Statmath.Application.Client
             _commandHandler = commandHandler;
         }
 
+        // start application logic for interactive usage
         public async Task RunAsync()
         {
             bool isActive;

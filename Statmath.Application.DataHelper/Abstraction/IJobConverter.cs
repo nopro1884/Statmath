@@ -2,8 +2,8 @@
 
 namespace Statmath.Application.DataHelper.Abstraction
 {
-    public interface IPlanConverter
+    public interface IJobConverter
     {
-        PlanViewModel ConvertFromCsv(string[] fields);
+        JobViewModel ConvertFromCsv(string[] fields);
     }
 }

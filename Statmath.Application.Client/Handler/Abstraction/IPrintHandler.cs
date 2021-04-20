@@ -5,6 +5,6 @@ namespace Statmath.Application.Client.Handler.Abstraction
 {
     public interface IPrintHandler
     {
-        void Print(IEnumerable<PlanViewModel> viewModels);
+        void Print(IEnumerable<JobViewModel> viewModels);
     }
 }

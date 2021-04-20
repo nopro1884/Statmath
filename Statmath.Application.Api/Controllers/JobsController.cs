@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace Statmath.Application.Api.Controllers
 {
-    public class PlanController : Controller
+    public class JobsController : Controller
     {
-        private readonly IPlanRepository _planRepository;
+        private readonly IJobRepository _jobRepository;
         private readonly IMapper _mapper;
 
-        public PlanController(IPlanRepository planRepository, IMapper mapper)
+        public JobsController(IJobRepository jobRepository, IMapper mapper)
         {
-            _planRepository = planRepository;
+            _jobRepository = jobRepository;
             _mapper = mapper;
         }
 
@@ -31,19 +31,19 @@ namespace Statmath.Application.Api.Controllers
 
         [ActionName(Constants.ApiActionDelete)]
         [HttpDelete]
-        public async Task<IActionResult> DeleteAsync([FromBody] PlanViewModel viewModel)
+        public async Task<IActionResult> DeleteAsync([FromBody] JobViewModel viewModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    throw new Exception($"Objects of {nameof(Int32)} are not valid in {nameof(PlanController)}");
+                    throw new Exception($"Objects of {nameof(Int32)} are not valid in {nameof(JobsController)}");
                 }
-                var model = _mapper.Map<PlanViewModel, PlanDto>(viewModel);
-                var affectedRow = await _planRepository.Delete(model);
+                var model = _mapper.Map<JobViewModel, JobDto>(viewModel);
+                var affectedRow = await _jobRepository.Delete(model);
                 return Ok(affectedRow);
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 return BadRequest("Unable to store data to database");
             }
@@ -55,7 +55,7 @@ namespace Statmath.Application.Api.Controllers
         {
             try
             {
-                var affectedRow = await _planRepository.Delete();
+                var affectedRow = await _jobRepository.Delete();
                 return Ok(affectedRow);
             }
             catch (System.Exception)
@@ -66,17 +66,17 @@ namespace Statmath.Application.Api.Controllers
 
         [ActionName(Constants.ApiActionCreate)]
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] PlanViewModel viewModel)
+        public async Task<IActionResult> CreateAsync([FromBody] JobViewModel viewModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    throw new System.Exception($"Objects of {nameof(PlanViewModel)} are not valid in {nameof(PlanController)}");
+                    throw new System.Exception($"Objects of {nameof(JobViewModel)} are not valid in {nameof(JobsController)}");
                 }
-                var model = _mapper.Map<PlanViewModel, PlanDto>(viewModel);
-                var entriesWritten = await _planRepository.Add(model);
-                return Ok($"{entriesWritten} plans stored");
+                var model = _mapper.Map<JobViewModel, JobDto>(viewModel);
+                var entriesWritten = await _jobRepository.Add(model);
+                return Ok($"{entriesWritten} jobs stored");
             }
             catch (System.Exception)
             {
@@ -86,17 +86,17 @@ namespace Statmath.Application.Api.Controllers
 
         [ActionName(Constants.ApiActionCreateMany)]
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] List<PlanViewModel> viewModels)
+        public async Task<IActionResult> CreateAsync([FromBody] List<JobViewModel> viewModels)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    throw new System.Exception($"Objects of {nameof(PlanViewModel)} are not valid in {nameof(PlanController)}");
-                }
-                var models = _mapper.Map<List<PlanViewModel>, List<PlanDto>>(viewModels).ToList();
-                var entriesWritten = await _planRepository.Add(models);
-                return Ok($"{entriesWritten} plans stored");
+                    throw new System.Exception($"Objects of {nameof(JobViewModel)} are not valid in {nameof(JobsController)}");
+                } 
+                var models = _mapper.Map<List<JobViewModel>, List<JobDto>>(viewModels).ToList();
+                var entriesWritten = await _jobRepository.Add(models);
+                return Ok($"{entriesWritten} jobs stored");
             }
             catch (System.Exception)
             {
@@ -116,9 +116,9 @@ namespace Statmath.Application.Api.Controllers
         {
             try
             {
-                var plan = _planRepository.GetByJob(j);
-                var planVm = _mapper.Map<PlanViewModel>(plan);
-                return Ok(planVm);
+                var job = _jobRepository.GetByJob(j);
+                var jobVm = _mapper.Map<JobViewModel>(job);
+                return Ok(jobVm);
             }
             catch (Exception)
             {
@@ -137,8 +137,8 @@ namespace Statmath.Application.Api.Controllers
         {
             try
             {
-                var models = _planRepository.GetByMachineName(m);
-                var viewModels = _mapper.Map<List<PlanDto>, List<PlanViewModel>>(models?.ToList());
+                var models = _jobRepository.GetByMachineName(m);
+                var viewModels = _mapper.Map<List<JobDto>, List<JobViewModel>>(models?.ToList());
                 return Ok(viewModels);
             }
             catch (Exception)
@@ -159,20 +159,20 @@ namespace Statmath.Application.Api.Controllers
         {
             try
             {
-                var models = default(List<PlanDto>);
+                var models = default(List<JobDto>);
                 switch (t)
                 {
                     case "start":
-                        models = _planRepository.GetByStartDate(d).ToList();
+                        models = _jobRepository.GetByStartDate(d).ToList();
                         break;
                     case "end":
-                        models = _planRepository.GetByEndDate(d).ToList();
+                        models = _jobRepository.GetByEndDate(d).ToList();
                         break;
                     default:
                         return BadRequest(CreateUnableGetDataMessage(t));
                 }
                 
-                var viewModels = _mapper.Map<List<PlanDto>, List<PlanViewModel>>(models);
+                var viewModels = _mapper.Map<List<JobDto>, List<JobViewModel>>(models);
                 return Ok(viewModels);
             }
             catch (Exception)
@@ -193,20 +193,20 @@ namespace Statmath.Application.Api.Controllers
         {
             try
             {
-                var models = default(List<PlanDto>);
+                var models = default(List<JobDto>);
                 switch (t)
                 {
                     case "start":
-                        models = _planRepository.GetByStartDateTime(d).ToList();
+                        models = _jobRepository.GetByStartDateTime(d).ToList();
                         break;
                     case "end":
-                        models = _planRepository.GetByEndDateTime(d).ToList();
+                        models = _jobRepository.GetByEndDateTime(d).ToList();
                         break;
                     default:
                         return BadRequest(CreateUnableGetDataMessage(t));
                 }
 
-                var viewModels = _mapper.Map<List<PlanDto>, List<PlanViewModel>>(models);
+                var viewModels = _mapper.Map<List<JobDto>, List<JobViewModel>>(models);
                 return Ok(viewModels);
             }
             catch (Exception)
@@ -223,8 +223,8 @@ namespace Statmath.Application.Api.Controllers
         {
             try
             {
-                var models = _planRepository.GetAll();
-                var viewModels = _mapper.Map<List<PlanDto>, List<PlanViewModel>>(models?.ToList());
+                var models = _jobRepository.GetAll();
+                var viewModels = _mapper.Map<List<JobDto>, List<JobViewModel>>(models?.ToList());
                 return Ok(viewModels);
             }
             catch (Exception)

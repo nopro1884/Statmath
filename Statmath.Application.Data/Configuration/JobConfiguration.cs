@@ -4,16 +4,17 @@ using Statmath.Application.Models;
 
 namespace Statmath.Application.Data.Configuration
 {
-    public class PlanConfiguration : IEntityTypeConfiguration<PlanDto>
+    public class JobConfiguration : IEntityTypeConfiguration<JobDto>
     {
-        public void Configure(EntityTypeBuilder<PlanDto> builder)
+        public void Configure(EntityTypeBuilder<JobDto> builder)
         {
             builder.HasKey(prop => prop.Id)
-                .HasName("id");
+                .HasName("JobId");
 
-            builder.Property(prop => prop.Machine)
-                .HasMaxLength(10)
-                .IsRequired();
+            builder.HasOne(m => m.Machine)
+                .WithMany(p => p.Jobs)
+                .HasForeignKey(k => k.MachineId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(prop => prop.Job)
                 .IsRequired();

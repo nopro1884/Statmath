@@ -1,5 +1,8 @@
 ﻿namespace Statmath.Application.Client
 {
+    /// <summary>
+    /// Model of the client application settings
+    /// </summary>
     public class AppSettings
     {
         public string Scheme { get; set; }

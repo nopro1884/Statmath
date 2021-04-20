@@ -12,11 +12,11 @@ namespace Statmath.Application.Client.Commands.Abstraction
 {
     public class CreateCommand : ICreateCommand
     {
-        private readonly IPlanConnectionHandler _connectionHandler;
+        private readonly IJobConnectionHandler _connectionHandler;
         private readonly ICsvHelper _csvHelper;
         private List<string> _args;
 
-        public CreateCommand(IPlanConnectionHandler connectionHandler, ICsvHelper csvHelper)
+        public CreateCommand(IJobConnectionHandler connectionHandler, ICsvHelper csvHelper)
         {
             _connectionHandler = connectionHandler;
             _csvHelper = csvHelper;
@@ -53,7 +53,7 @@ namespace Statmath.Application.Client.Commands.Abstraction
                 if (_csvHelper.IsFileNotInUse(filePath))
                 {
                     var data = _csvHelper.ReadCsvFile(filePath).ToList();
-                    var response = await _connectionHandler.CreatePlans(data);
+                    var response = await _connectionHandler.CreateJobs(data);
                     Console.WriteLine(response);
                     return true;
                 }

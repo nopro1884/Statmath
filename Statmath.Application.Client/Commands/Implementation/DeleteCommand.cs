@@ -11,10 +11,10 @@ namespace Statmath.Application.Client.Commands.Implementation
 {
     public class DeleteCommand : IDeleteCommand
     {
-        private readonly IPlanConnectionHandler _connectionHandler;
+        private readonly IJobConnectionHandler _connectionHandler;
         private ICollection<string> _args;
 
-        public DeleteCommand(IPlanConnectionHandler connectionHandler)
+        public DeleteCommand(IJobConnectionHandler connectionHandler)
         {
             _connectionHandler = connectionHandler;
         }
@@ -31,7 +31,7 @@ namespace Statmath.Application.Client.Commands.Implementation
                     var firstArg = _args.First();
                     if (firstArg == Constants.CmdArgAll)
                     {
-                        // delete all entries from plan table
+                        // delete all entries from table
                         affectedRows = await _connectionHandler.DeleteAll();
                     }
                     else
@@ -51,10 +51,10 @@ namespace Statmath.Application.Client.Commands.Implementation
                         {
                             // getting job that should deleted
                             var vm = await _connectionHandler.GetByJob(job);
-                            if (vm == default(PlanViewModel))
+                            if (vm == default(JobViewModel))
                             {
                                 // job not found -> no delete execution
-                                Console.WriteLine($"Unable to find plan with job {job}");
+                                Console.WriteLine($"Unable to find job with id {job}");
                             }
                             else
                             {
@@ -77,7 +77,7 @@ namespace Statmath.Application.Client.Commands.Implementation
             finally
             {
                 var message = affectedRows == 0
-                     ? "No plans deleted"
+                     ? "No jobs deleted"
                      : $"{affectedRows} deleted";
                 Console.WriteLine(message);
             }

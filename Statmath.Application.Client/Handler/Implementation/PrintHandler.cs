@@ -8,11 +8,11 @@ namespace Statmath.Application.Client.Handler.Implementation
 {
     public class PrintHandler : IPrintHandler
     {
-        private IEnumerable<PlanViewModel> _viewModels = default(IEnumerable<PlanViewModel>);
+        private IEnumerable<JobViewModel> _viewModels = default(IEnumerable<JobViewModel>);
 
-        public ICollection<PlanViewModel> ViewModels => throw new NotImplementedException();
+        public ICollection<JobViewModel> ViewModels => throw new NotImplementedException();
 
-        public void Print(IEnumerable<PlanViewModel> viewModels)
+        public void Print(IEnumerable<JobViewModel> viewModels)
         {
             _viewModels = viewModels;
 
@@ -36,7 +36,7 @@ namespace Statmath.Application.Client.Handler.Implementation
             Console.WriteLine(Constants.HeaderHorizontalLine);
         }
 
-        private void PrintRow(PlanViewModel vm)
+        private void PrintRow(JobViewModel vm)
         {
             var textMachine = vm.Machine.PadLeft(Constants.HeaderMachine.Length-1);
             var textJob = Convert.ToString(vm.Job).PadLeft(Constants.HeaderJob.Length-1);

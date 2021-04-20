@@ -31,24 +31,32 @@ namespace Statmath.Application.Client
             return _serviceScope.ServiceProvider.GetService<ConsoleApplication>();
         }
 
+        /// <summary>
+        /// load application settings file an make it accessable for other user
+        /// </summary>
+        /// <returns>Configration</returns>
         private  IConfiguration GetConfiguration()
         {
-            //var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            // create builderand return configuration reference
             var builder = new ConfigurationBuilder()
                 .AddJsonFile($"appsettings.json", true, true)
-                //.AddJsonFile($"appsettings.{env}.json", true, true)
                 .AddEnvironmentVariables();
 
             return builder.Build();
         }
 
+        /// <summary>
+        /// Configure and create service provider for di/ioc
+        /// </summary>
+        /// <returns></returns>
         private  IServiceProvider GetServiceProvider()
         {
             var services = new ServiceCollection();
             // provide app settings
-            services.AddSingleton(typeof(AppSettings), _appSettings);
+            //services.AddSingleton(typeof(AppSettings), _appSettings);
+            services.Configure<AppSettings>(_configuration.GetSection(nameof(AppSettings)));
             // common app stuff
-            services.AddSingleton<IPlanConverter, PlanConverter>();
+            services.AddSingleton<IJobConverter, JobConverter>();
             services.AddSingleton<ICsvHelper, CsvHelper>();
             // provide commands
             services.AddTransient<ICreateCommand, CreateCommand>();
@@ -60,7 +68,7 @@ namespace Statmath.Application.Client
             services.AddTransient<IDeleteCommand, DeleteCommand>();
             // provide handler
             services.AddTransient<ICommandHandler, CommandHandler>();
-            services.AddTransient<IPlanConnectionHandler, PlanConnectionHandler>();
+            services.AddTransient<IJobConnectionHandler, JobConnectionHandler>();
             services.AddScoped<ConsoleApplication>();
             return services.BuildServiceProvider();
         }

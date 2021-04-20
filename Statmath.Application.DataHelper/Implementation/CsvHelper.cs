@@ -10,9 +10,9 @@ namespace Statmath.Application.DataHelper.Implementation
 {
     public class CsvHelper : ICsvHelper
     {
-        private readonly IPlanConverter _converter;
+        private readonly IJobConverter _converter;
 
-        public CsvHelper(IPlanConverter converter)
+        public CsvHelper(IJobConverter converter)
         {
             _converter = converter;
         }
@@ -33,7 +33,7 @@ namespace Statmath.Application.DataHelper.Implementation
             }
         }
 
-        public IEnumerable<PlanViewModel> ReadCsvFile(string filePath, bool isHeaderIncluded = false)
+        public IEnumerable<JobViewModel> ReadCsvFile(string filePath, bool isHeaderIncluded = false)
         {
             try
             {

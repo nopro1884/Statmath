@@ -10,8 +10,8 @@ using Statmath.Application.Data.Context;
 namespace Statmath.Application.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210419045814_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20210419210812_DeleteCascade")]
+    partial class DeleteCascade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,12 +21,12 @@ namespace Statmath.Application.Api.Migrations
                 .HasAnnotation("ProductVersion", "3.1.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Statmath.Application.Models.PlanDto", b =>
+            modelBuilder.Entity("Statmath.Application.Models.JobDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
-                        .HasDefaultValue(new Guid("452dd4c6-728b-4a4d-a934-8a96f899d38c"));
+                        .HasDefaultValue(new Guid("6c456067-4c0d-48b2-b02d-5de9a8fb495b"));
 
                     b.Property<DateTime>("EndedAt")
                         .HasColumnType("TIMESTAMP(0)");
@@ -34,21 +34,47 @@ namespace Statmath.Application.Api.Migrations
                     b.Property<int>("Job")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Machine")
-                        .IsRequired()
-                        .HasColumnType("character varying(10)")
-                        .HasMaxLength(10);
+                    b.Property<Guid>("MachineId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("TIMESTAMP(0)");
 
                     b.HasKey("Id")
-                        .HasName("id");
+                        .HasName("JobId");
 
                     b.HasIndex("Job")
                         .IsUnique();
 
-                    b.ToTable("Plans");
+                    b.HasIndex("MachineId");
+
+                    b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("Statmath.Application.Models.MachineDto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Machines");
+                });
+
+            modelBuilder.Entity("Statmath.Application.Models.JobDto", b =>
+                {
+                    b.HasOne("Statmath.Application.Models.MachineDto", "Machine")
+                        .WithMany("Jobs")
+                        .HasForeignKey("MachineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

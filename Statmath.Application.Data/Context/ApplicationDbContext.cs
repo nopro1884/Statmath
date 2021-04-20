@@ -11,24 +11,20 @@ namespace Statmath.Application.Data.Context
         {
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=application;Username=postgres;Password=password");
-
-        //    base.OnConfiguring(optionsBuilder);
-        //}
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // apply configuration
-            modelBuilder.ApplyConfiguration(new PlanConfiguration());
+            modelBuilder.ApplyConfiguration(new MachineConfiguration());
+            modelBuilder.ApplyConfiguration(new JobConfiguration());
 
-            // default behavior if guid is not set on add plan entity
-            modelBuilder.Entity<PlanDto>().Property(x => x.Id).HasDefaultValue(Guid.NewGuid());
+            // default behavior if guid is not set on add job entity
+            modelBuilder.Entity<JobDto>().Property(x => x.Id).HasDefaultValue(Guid.NewGuid());
 
             base.OnModelCreating(modelBuilder);
         }
 
-        public virtual DbSet<PlanDto> Plans { get; set; }
+        public virtual DbSet<JobDto> Jobs { get; set; }
+
+        public virtual DbSet<MachineDto> Machines { get; set; }
     }
 }

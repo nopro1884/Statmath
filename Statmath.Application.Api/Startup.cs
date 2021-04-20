@@ -34,7 +34,7 @@ namespace Statmath.Application.Api
 
             services.AddScoped<IDateTimeConverter, DateTimeConverter>();
             services.AddScoped<IDateTimeHelper, DateTimeHelper>();
-            services.AddScoped<IPlanRepository, PlanRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();
 
             services.AddAutoMapper(typeof(MapperProfiles));
 

@@ -11,17 +11,17 @@ namespace Statmath.Application.Client.Commands.Implementation
 {
     public class ReadCommand : IReadCommand
     {
-        private readonly IPlanConnectionHandler _connectionHandler;
+        private readonly IJobConnectionHandler _connectionHandler;
         private readonly IPrintHandler _printHandler;
         private List<string> _args;
 
-        public ReadCommand(IPlanConnectionHandler connectionHandler, IPrintHandler printHandler)
+        public ReadCommand(IJobConnectionHandler connectionHandler, IPrintHandler printHandler)
         {
             _connectionHandler = connectionHandler;
             _printHandler = printHandler;
         }
 
-        private async Task<IEnumerable<PlanViewModel>> GetJobsByDate(string time, string date)
+        private async Task<IEnumerable<JobViewModel>> GetJobsByDate(string time, string date)
         {
             switch (time)
             {
@@ -35,7 +35,7 @@ namespace Statmath.Application.Client.Commands.Implementation
             }
         }
 
-        private async Task<IEnumerable<PlanViewModel>> GetJobsByDateTime(string time, string datetime)
+        private async Task<IEnumerable<JobViewModel>> GetJobsByDateTime(string time, string datetime)
         {
             switch (time)
             {
@@ -53,17 +53,17 @@ namespace Statmath.Application.Client.Commands.Implementation
         {
             if (_args?.Any() ?? false)
             {
-                var results = default(IEnumerable<PlanViewModel>);
+                var results = default(IEnumerable<JobViewModel>);
                 // parse combinations
                 // read all
                 if (_args.Count() == 1 && _args.First() == Constants.CmdArgAll)
                 {
                     // get all stored jobs from database
                     // todo: handle output
-                    var plans = await _connectionHandler.GetAll();
-                    if (plans?.Any() ?? false)
+                    var jobs = await _connectionHandler.GetAll();
+                    if (jobs?.Any() ?? false)
                     {
-                        results = plans;
+                        results = jobs;
                     }
                 }
                 // read by uni arg command
@@ -75,20 +75,20 @@ namespace Statmath.Application.Client.Commands.Implementation
                         if (int.TryParse(payload, out var job))
                         {
                             // get job by job id
-                            var plan = await _connectionHandler.GetByJob(job);
-                            if (plan != default(PlanViewModel))
+                            var jobs = await _connectionHandler.GetByJob(job);
+                            if (jobs != default(JobViewModel))
                             {
-                                results = new List<PlanViewModel>() { plan };
+                                results = new List<JobViewModel>() { jobs };
                             }
                         }
                     }
                     if (_args.First() == Constants.CmdArgMachine)
                     {
                         // get jobs by machine name
-                        var plans = await _connectionHandler.GetByMachine(payload);
-                        if (plans?.Any() ?? false)
+                        var jobs = await _connectionHandler.GetByMachine(payload);
+                        if (jobs?.Any() ?? false)
                         {
-                            results = plans;
+                            results = jobs;
                         }
                     }
                 }
@@ -98,17 +98,17 @@ namespace Statmath.Application.Client.Commands.Implementation
                     switch (_args[0])
                     {
                         case Constants.CmdArgDate:
-                            var plans = await GetJobsByDate(_args[1], _args[2]);
-                            if (plans?.Any() ?? false)
+                            var jobs = await GetJobsByDate(_args[1], _args[2]);
+                            if (jobs?.Any() ?? false)
                             {
-                                results = plans;
+                                results = jobs;
                             }
                             break;
                         case Constants.CmdArgDateTime:
-                            plans = await GetJobsByDateTime(_args[1], _args[2]);
-                            if (plans?.Any() ?? false)
+                            jobs = await GetJobsByDateTime(_args[1], _args[2]);
+                            if (jobs?.Any() ?? false)
                             {
-                                results = plans;
+                                results = jobs;
                             }
                             break;
                     }

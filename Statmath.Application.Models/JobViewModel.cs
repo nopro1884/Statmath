@@ -2,7 +2,7 @@
 
 namespace Statmath.Application.Models
 {
-    public class PlanViewModel
+    public class JobViewModel
     {
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }

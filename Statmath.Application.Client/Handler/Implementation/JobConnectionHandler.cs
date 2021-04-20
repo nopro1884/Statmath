@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Statmath.Application.Client.Handler.Abstraction;
 using Statmath.Application.Models;
 using Statmath.Application.Shared;
@@ -11,20 +12,19 @@ using System.Threading.Tasks;
 
 namespace Statmath.Application.Client.Handler.Implementation
 {
-    public class PlanConnectionHandler : IPlanConnectionHandler
+    public class JobConnectionHandler : IJobConnectionHandler
     {
-        private readonly AppSettings _appSettings;
         private readonly Uri _uri;
 
-        public PlanConnectionHandler(AppSettings appSettings)
+        public JobConnectionHandler(IOptionsMonitor<AppSettings> optionsDelegate)
         {
-            _appSettings = appSettings;
+            // build default uri to cosume restful api 
             _uri = new UriBuilder
             {
-                Host = _appSettings.Host,
-                Scheme = _appSettings.Scheme,
-                Path = _appSettings.Path,
-                Port = _appSettings.Port,
+                Host = optionsDelegate.CurrentValue.Host,
+                Scheme = optionsDelegate.CurrentValue.Scheme,
+                Path = optionsDelegate.CurrentValue.Path,
+                Port = optionsDelegate.CurrentValue.Port,
             }.Uri;
         }
 
@@ -107,7 +107,7 @@ namespace Statmath.Application.Client.Handler.Implementation
 
             try
             {
-                using var client = new System.Net.Http.HttpClient(); 
+                using var client = new System.Net.Http.HttpClient();
                 string response = await client.GetStringAsync(uri);
                 var result = JsonConvert.DeserializeObject<T>(response);
                 return result;
@@ -128,7 +128,7 @@ namespace Statmath.Application.Client.Handler.Implementation
 
             try
             {
-                request = (HttpWebRequest) WebRequest.Create($"{_uri}/{action}");
+                request = (HttpWebRequest)WebRequest.Create($"{_uri}/{action}");
                 request.Method = "DELETE";
                 if (payload != null)
                 {
@@ -168,74 +168,119 @@ namespace Statmath.Application.Client.Handler.Implementation
             }
         }
 
+        /// <summary>
+        /// delete all entries from database
+        /// </summary>
+        /// <returns>affected rows</returns>
         public async Task<int> DeleteAll()
         {
             var response = await MakeDeleteRequest(Constants.ApiActionDeleteMany);
             return response;
         }
 
-        public async Task<int> Delete(PlanViewModel viewModel)
+        /// <summary>
+        /// delete a single row from database
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <returns>affected rows</returns>
+        public async Task<int> Delete(JobViewModel viewModel)
         {
             var response = await MakeDeleteRequest(Constants.ApiActionDelete, viewModel);
             return response;
         }
 
-        public async Task<string> CreatePlan(PlanViewModel viewModel)
+        /// <summary>
+        /// create a viewmodel row in database
+        /// </summary>
+        /// <param name="viewModel">viewmodel to create</param>
+        /// <returns>affected rows</returns>
+        public async Task<string> CreateJob(JobViewModel viewModel)
         {
             var response = await MakePostRequest(Constants.ApiActionCreate, viewModel);
             return response;
         }
 
-        public async Task<string> CreatePlans(IEnumerable<PlanViewModel> viewModels)
+        /// <summary>
+        /// create a bunch of viewmodel rows in database
+        /// </summary>
+        /// <param name="viewModels">viewmodels to create</param>
+        /// <returns>affected rows</returns>
+        public async Task<string> CreateJobs(IEnumerable<JobViewModel> viewModels)
         {
             var response = await MakePostRequest(Constants.ApiActionCreateMany, viewModels);
             return response;
         }
 
-        public async Task<ICollection<PlanViewModel>> GetAll()
+        /// <summary>
+        /// get all jobs from database
+        /// </summary>
+        /// <returns>list of jobs</returns>
+        public async Task<ICollection<JobViewModel>> GetAll()
         {
-            var response = await MakeGetRequest<ICollection<PlanViewModel>>(Constants.ApiActionGetAll);
+            var response = await MakeGetRequest<ICollection<JobViewModel>>(Constants.ApiActionGetAll);
             return response;
         }
 
-        public async Task<PlanViewModel> GetByJob(int job)
+        /// <summary>
+        /// get a single row from db by job id
+        /// </summary>
+        /// <param name="job">job id</param>
+        /// <returns>jobs viewmodel</returns>
+        public async Task<JobViewModel> GetByJob(int job)
         {
             var queryParameters = new List<KeyValuePair<string, dynamic>> {
                 new KeyValuePair<string, dynamic>(Constants.ApiParamJob, job)
             };
-            var response = await MakeGetRequest<PlanViewModel>(Constants.ApiActionGetByJob, queryParameters);
+            var response = await MakeGetRequest<JobViewModel>(Constants.ApiActionGetByJob, queryParameters);
             return response;
         }
 
-        public async Task<ICollection<PlanViewModel>> GetByMachine(string machine)
+
+        /// <summary>
+        /// get jobs by machine
+        /// </summary>
+        /// <param name="machine">name of machine</param>
+        /// <returns>a list of jobs</returns>
+        public async Task<ICollection<JobViewModel>> GetByMachine(string machine)
         {
             var queryParameters = new List<KeyValuePair<string, dynamic>> {
                 new KeyValuePair<string, dynamic>(Constants.ApiParamMachine, machine)
             };
-            var response = await MakeGetRequest<ICollection<PlanViewModel>>(Constants.ApiActionGetByMachine, queryParameters);
+            var response = await MakeGetRequest<ICollection<JobViewModel>>(Constants.ApiActionGetByMachine, queryParameters);
             return response;
         }
 
-        public async Task<ICollection<PlanViewModel>> GetByDate(string type, string date)
+
+        /// <summary>
+        /// get jobs by date
+        /// </summary>
+        /// <param name="type">start or end</param>
+        /// <param name="date">date</param>
+        /// <returns>a list of jobs</returns>
+        public async Task<ICollection<JobViewModel>> GetByDate(string type, string date)
         {
             var queryParameters = new List<KeyValuePair<string, dynamic>> {
                 new KeyValuePair<string, dynamic>(Constants.ApiParamTime, type),
                 new KeyValuePair<string, dynamic>(Constants.ApiParamDate, date)
             };
-            var response = await MakeGetRequest<ICollection<PlanViewModel>>(Constants.ApiActionGetByDate, queryParameters);
+            var response = await MakeGetRequest<ICollection<JobViewModel>>(Constants.ApiActionGetByDate, queryParameters);
             return response;
         }
 
-        public async Task<ICollection<PlanViewModel>> GetByDateTime(string type, string datetime)
+        /// <summary>
+        /// get jobs by date
+        /// </summary>
+        /// <param name="type">start or end</param>
+        /// <param name="date">date</param>
+        /// <returns>a list of jobs</returns>
+        public async Task<ICollection<JobViewModel>> GetByDateTime(string type, string datetime)
         {
             var queryParameters = new List<KeyValuePair<string, dynamic>> {
                 new KeyValuePair<string, dynamic>(Constants.ApiParamTime, type),
                 new KeyValuePair<string, dynamic>(Constants.ApiParamDate, datetime)
             };
-            var response = await MakeGetRequest<ICollection<PlanViewModel>>(Constants.ApiActionGetByDateTime, queryParameters);
+            var response = await MakeGetRequest<ICollection<JobViewModel>>(Constants.ApiActionGetByDateTime, queryParameters);
             return response;
         }
-
-
     }
 }

@@ -3,15 +3,15 @@ using Statmath.Application.Models;
 
 namespace Statmath.Application.DataHelper.Implementation
 {
-    public class PlanConverter : IPlanConverter
+    public class JobConverter : IJobConverter
     {
-        public PlanViewModel ConvertFromCsv(string[] fields)
+        public JobViewModel ConvertFromCsv(string[] fields)
         {
             // make sure that the structure is complete
             // and the job could be converted into integer
             if (fields.Length == 4 && int.TryParse(fields[1], out var job))
             {
-                return new PlanViewModel
+                return new JobViewModel
                 {
                     Machine = fields[0],
                     Job = job,
