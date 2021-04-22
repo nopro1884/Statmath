@@ -7,7 +7,7 @@ namespace Statmath.Application.Mapping.Resolver
     {
         public string Resolve(JobDto source, JobViewModel destination, string destMember, ResolutionContext context)
         {
-            return source.Machine.Name;
+            return source.Machine?.Name ?? string.Empty;
         }
     }
 }

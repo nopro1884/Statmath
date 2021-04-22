@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Statmath.Application.Client.Commands.Abstraction;
 using Statmath.Application.Client.Commands.Implementation;
+using Statmath.Application.Client.Common.Abstraction;
+using Statmath.Application.Client.Common.Implementation;
 using Statmath.Application.Client.Handler.Abstraction;
 using Statmath.Application.Client.Handler.Implementation;
 using Statmath.Application.DataHelper.Abstraction;
@@ -69,6 +71,9 @@ namespace Statmath.Application.Client
             // provide handler
             services.AddTransient<ICommandHandler, CommandHandler>();
             services.AddTransient<IJobConnectionHandler, JobConnectionHandler>();
+            // provide helper
+            services.AddTransient<IRequestHelper, RequestHelper>();
+            // provide app
             services.AddScoped<ConsoleApplication>();
             return services.BuildServiceProvider();
         }

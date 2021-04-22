@@ -86,10 +86,12 @@ namespace Statmath.Application.Repository.Implementation
         {
             try
             {
-                var job = _context.Jobs.Where(x => x.Id == dto.Id);
+                var job = _context.Jobs.SingleOrDefault(x => x.Id == dto.Id);
                 if (job != default(JobDto))
                 {
-                    _context.Jobs.Remove(dto);
+                    var machine = _context.Machines.SingleOrDefault(m => m.Id == job.MachineId);
+                    machine.Jobs.Remove(job);
+                    _context.Jobs.Remove(job);
                     return await _context.SaveChangesAsync();
                 }
                 return 0;
@@ -105,13 +107,21 @@ namespace Statmath.Application.Repository.Implementation
         {
             try
             {
+                var hasChanged = false;
+                var machines = _context.Machines;
+                if (machines?.Any() ?? false)
+                {
+                    _context.Machines.RemoveRange(machines);
+                    hasChanged = true;
+                }
+
                 var jobs = _context.Jobs;
                 if (jobs?.Any() ?? false)
                 {
                     _context.Jobs.RemoveRange(jobs);
-                    return await _context.SaveChangesAsync();
+                    hasChanged = true;
                 }
-                return 0;
+                return hasChanged ? await _context.SaveChangesAsync() : 0;
             }
             catch (Exception)
             {
@@ -171,10 +181,10 @@ namespace Statmath.Application.Repository.Implementation
         // get job by job number
         public JobDto GetByJob(int job)
         {
-            var dto = _context.Jobs.FirstOrDefault(p => p.Job == job);
-            if (dto == default(JobDto))
-                dto.Machine = _context.Machines.FirstOrDefault(m => m.Id == dto.MachineId);
-            return dto;
+            var list = _context.Jobs.Where(p => p.Job == job).ToList();
+            LoadMachineLazy(list);
+
+            return list?.Any() ?? false ? list.FirstOrDefault() : default;
         }
 
         // get jobs by machine name
@@ -189,7 +199,7 @@ namespace Statmath.Application.Repository.Implementation
         private void LoadMachineLazy(IEnumerable<JobDto> jobs)
         {
             // exit if list null or empty
-            if (jobs?.Any() ?? false)
+            if (!jobs?.Any() ?? false)
                 return;
 
             foreach (var job in jobs)

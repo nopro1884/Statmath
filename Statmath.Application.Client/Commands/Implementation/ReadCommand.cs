@@ -21,6 +21,12 @@ namespace Statmath.Application.Client.Commands.Implementation
             _printHandler = printHandler;
         }
 
+        /// <summary>
+        /// read jobs by date and time
+        /// </summary>
+        /// <param name="time">time - start or end</param>
+        /// <param name="datetime">the date</param>
+        /// <returns></returns>
         private async Task<IEnumerable<JobViewModel>> GetJobsByDate(string time, string date)
         {
             switch (time)
@@ -35,6 +41,12 @@ namespace Statmath.Application.Client.Commands.Implementation
             }
         }
 
+        /// <summary>
+        /// read jobs by datetime and time
+        /// </summary>
+        /// <param name="time">time - start or end</param>
+        /// <param name="datetime">the date and time</param>
+        /// <returns></returns>
         private async Task<IEnumerable<JobViewModel>> GetJobsByDateTime(string time, string datetime)
         {
             switch (time)
@@ -49,22 +61,24 @@ namespace Statmath.Application.Client.Commands.Implementation
             }
         }
 
+        /// <summary>
+        /// Execution logic
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> Execute()
         {
             if (_args?.Any() ?? false)
             {
-                var results = default(IEnumerable<JobViewModel>);
-                // parse combinations
                 // read all
                 if (_args.Count() == 1 && _args.First() == Constants.CmdArgAll)
                 {
                     // get all stored jobs from database
-                    // todo: handle output
                     var jobs = await _connectionHandler.GetAll();
                     if (jobs?.Any() ?? false)
-                    {
-                        results = jobs;
-                    }
+                        _printHandler.Print(jobs);
+                    else
+                        Console.WriteLine("Oups! No jobs found!");
+                    return true;
                 }
                 // read by uni arg command
                 var payload = _args.Last();
@@ -77,9 +91,11 @@ namespace Statmath.Application.Client.Commands.Implementation
                             // get job by job id
                             var jobs = await _connectionHandler.GetByJob(job);
                             if (jobs != default(JobViewModel))
-                            {
-                                results = new List<JobViewModel>() { jobs };
-                            }
+                                _printHandler.Print(new List<JobViewModel>() { jobs });
+                            else
+                                Console.WriteLine($"No jobs with id \"{payload}\"");
+
+                            return true;
                         }
                     }
                     if (_args.First() == Constants.CmdArgMachine)
@@ -87,35 +103,33 @@ namespace Statmath.Application.Client.Commands.Implementation
                         // get jobs by machine name
                         var jobs = await _connectionHandler.GetByMachine(payload);
                         if (jobs?.Any() ?? false)
-                        {
-                            results = jobs;
-                        }
+                            _printHandler.Print(jobs);
+                        else
+                            Console.WriteLine($"No jobs for machine \"{payload}\"");
+
+                        return true;
                     }
                 }
                 // read by multi args command
                 if (_args.Count() == 3)
                 {
+                    var jobs = default(IEnumerable<JobViewModel>);
+                    var type = _args[1];
+                    payload = _args[2];
                     switch (_args[0])
                     {
                         case Constants.CmdArgDate:
-                            var jobs = await GetJobsByDate(_args[1], _args[2]);
-                            if (jobs?.Any() ?? false)
-                            {
-                                results = jobs;
-                            }
+                            jobs = await GetJobsByDate(type, payload);
                             break;
                         case Constants.CmdArgDateTime:
-                            jobs = await GetJobsByDateTime(_args[1], _args[2]);
-                            if (jobs?.Any() ?? false)
-                            {
-                                results = jobs;
-                            }
+                            jobs = await GetJobsByDateTime(type, payload);
                             break;
                     }
-                }
-                if (results?.Any() ?? false)
-                {
-                    _printHandler.Print(results);
+                    if (jobs?.Any() ?? false)
+                        _printHandler.Print(jobs);
+                    else
+                        Console.WriteLine($"No jobs with {type} date  \"{payload}\"");
+
                     return true;
                 }
             }

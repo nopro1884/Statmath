@@ -8,14 +8,8 @@ namespace Statmath.Application.Client.Handler.Implementation
 {
     public class PrintHandler : IPrintHandler
     {
-        private IEnumerable<JobViewModel> _viewModels = default(IEnumerable<JobViewModel>);
-
-        public ICollection<JobViewModel> ViewModels => throw new NotImplementedException();
-
         public void Print(IEnumerable<JobViewModel> viewModels)
         {
-            _viewModels = viewModels;
-
             PrintHeader();
             foreach (var vm in viewModels)
             {
